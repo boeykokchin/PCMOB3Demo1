@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, View, Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import BlockRGB from './components/BlockRGB';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { color } from 'react-native-reanimated';
+import BlockRGB from './components/BlockRGB';
 
 function HomeScreen({ navigation }) {
-  const [colorArray, setColorArray] = React.useState([]);
+  const [colorArray, setColorArray] = useState([]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -88,6 +87,28 @@ function HomeScreen({ navigation }) {
 
 function DetailsScreen({ route }) {
   const { red, green, blue } = route.params;
+  const FadeInView = (props) => {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start();
+    }, [fadeAnim]);
+
+    return (
+      <Animated.View
+        style={{
+          ...props.style,
+          opacity: fadeAnim,
+        }}
+      >
+        {props.children}
+      </Animated.View>
+    );
+  };
 
   let yiq = (red * 299 + green * 587 + blue * 114) / 1000;
   let textColor = yiq >= 128 ? 'black' : 'white';
@@ -102,16 +123,18 @@ function DetailsScreen({ route }) {
         backgroundColor: `rgb(${red}, ${green}, ${blue})`,
       }}
     >
-      <Text style={{ color: `${textColor}` }}>YIQ: {yiq}</Text>
-      <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
-        Red: {red}
-      </Text>
-      <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
-        Green: {green}
-      </Text>
-      <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
-        Blue: {blue}
-      </Text>
+      <FadeInView>
+        <Text style={{ color: `${textColor}` }}>YIQ: {yiq}</Text>
+        <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
+          Red: {red}
+        </Text>
+        <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
+          Green: {green}
+        </Text>
+        <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
+          Blue: {blue}
+        </Text>
+      </FadeInView>
     </View>
   );
 }
