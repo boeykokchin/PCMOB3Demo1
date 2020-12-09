@@ -102,7 +102,7 @@ function DetailsScreen({ route }) {
         backgroundColor: `rgb(${red}, ${green}, ${blue})`,
       }}
     >
-      <Text style={{ color: `${textColor}` }}>{yiq}</Text>
+      <Text style={{ color: `${textColor}` }}>YIQ: {yiq}</Text>
       <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
         Red: {red}
       </Text>
@@ -121,7 +121,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerTintColor: 'orange' }}>
         <Stack.Screen name='Color Dots' component={HomeScreen} />
         <Stack.Screen name='Color Dot Details' component={DetailsScreen} />
       </Stack.Navigator>
