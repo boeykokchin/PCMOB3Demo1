@@ -88,21 +88,31 @@ function HomeScreen({ navigation }) {
 function DetailsScreen({ route }) {
   const { red, green, blue } = route.params;
   const FadeInView = (props) => {
-    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const scale = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }).start();
-    }, [fadeAnim]);
+      Animated.sequence([
+        Animated.timing(scale, {
+          toValue: 1.7,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, [scale]);
 
     return (
       <Animated.View
         style={{
           ...props.style,
-          opacity: fadeAnim,
+          width: 300,
+          height: 300,
+          borderRadius: 200,
+          alignItems: 'center',
+          justifyContent: 'center',
+          transform: [{ scale: scale }],
         }}
       >
         {props.children}
@@ -114,24 +124,18 @@ function DetailsScreen({ route }) {
   let textColor = yiq >= 128 ? 'black' : 'white';
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 50,
-        backgroundColor: `rgb(${red}, ${green}, ${blue})`,
-      }}
-    >
-      <FadeInView>
-        <Text style={{ color: `${textColor}` }}>YIQ: {yiq}</Text>
-        <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
-          Red: {red}
-        </Text>
-        <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <FadeInView
+        style={{
+          backgroundColor: `rgb(${red}, ${green}, ${blue})`,
+        }}
+      >
+        <Text>YIQ: {yiq}</Text>
+        <Text style={{ fontSize: 30, color: `${textColor}` }}>Red: {red}</Text>
+        <Text style={{ fontSize: 30, color: `${textColor}` }}>
           Green: {green}
         </Text>
-        <Text style={[styles.colorDetails, { color: `${textColor}` }]}>
+        <Text style={{ fontSize: 30, color: `${textColor}` }}>
           Blue: {blue}
         </Text>
       </FadeInView>
@@ -158,9 +162,5 @@ const styles = StyleSheet.create({
     // backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'flex-start',
-  },
-
-  colorDetails: {
-    fontSize: 30,
   },
 });
