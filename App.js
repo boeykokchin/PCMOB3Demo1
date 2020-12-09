@@ -75,11 +75,13 @@ function HomeScreen({ navigation }) {
         //   </Text>
         // </TouchableOpacity>
       }
+
       <FlatList
         contentContainerStyle={{ justifyContent: 'center' }}
         // style={{ width: '100%' }}
         data={colorArray}
         renderItem={renderItem}
+        numColumns={4}
       />
     </View>
   );
@@ -87,7 +89,7 @@ function HomeScreen({ navigation }) {
 
 function DetailsScreen({ route }) {
   const { red, green, blue } = route.params;
-  const FadeInView = (props) => {
+  const ZoomInOutView = (props) => {
     const scale = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -125,7 +127,7 @@ function DetailsScreen({ route }) {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <FadeInView
+      <ZoomInOutView
         style={{
           backgroundColor: `rgb(${red}, ${green}, ${blue})`,
         }}
@@ -138,7 +140,7 @@ function DetailsScreen({ route }) {
         <Text style={{ fontSize: 30, color: `${textColor}` }}>
           Blue: {blue}
         </Text>
-      </FadeInView>
+      </ZoomInOutView>
     </View>
   );
 }
